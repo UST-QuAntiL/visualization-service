@@ -1,0 +1,13 @@
+black==21.8b0
+click==8.0.1
+coverage==5.5
+Flask==2.0.1
+flask-smorest==0.34.0
+marshmallow==3.13.0
+matplotlib==3.5.3
+numpy==1.21.2
+scipy==1.8.1
+networkx==2.8.6
+werkzeug==2.0.3
+qiskit==0.44.1
+qiskit-optimization==0.5.0
