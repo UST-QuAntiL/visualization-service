@@ -10,7 +10,7 @@ class CircuitField(fields.Field):
             raise ValidationError("Field should be str or list")
 
 
-class Parameters(fields.Field):
+class ParametersField(fields.Field):
     def _deserialize(self, value, attr, data, **kwargs):
         if isinstance(value, dict) or isinstance(value, list):
             return value
@@ -18,46 +18,58 @@ class Parameters(fields.Field):
             raise ValidationError("Field should be dict or list")
 
 
+class AnyField(fields.Field):
+    def _deserialize(self, value, attr, data, **kwargs):
+        return value
+
+
 class CircuitVisualizationRequest:
-    def __init__(self, circuit, circuitFormat):
+    def __init__(self, circuit, circuit_format):
         self.circuit = circuit
-        self.circuitFormat = circuitFormat
+        self.circuit_format = circuit_format
 
 
 class CircuitVisualizationRequestSchema(ma.Schema):
     circuit = CircuitField(required=True)
-    circuitFormat = ma.fields.Str(required=True)
+    circuit_format = ma.fields.Str(required=True)
 
 
 class OptimizationLandscapeVisualizationRequest:
-    def __init__(self, optimizationHistory):
-        self.optimizationHistory = optimizationHistory
+    def __init__(self, optimization_path):
+        self.optimization_path = optimization_path
 
 
 class OptimizationLandscapeVisualizationRequestSchema(ma.Schema):
-    optimizationHistory = ma.fields.List(
+    optimization_path = ma.fields.List(
         ma.fields.List(ma.fields.Float()), required=True
     )
 
 
 class ExecutionResultVisualizationRequest:
     def __init__(
-        self,
-        counts,
+            self,
+            counts,
+            max_number_of_plotted_values=2 ** 6
     ):
         self.counts = counts
+        self.max_number_of_plotted_values = max_number_of_plotted_values
 
 
 class ExecutionResultVisualizationRequestSchema(ma.Schema):
     counts = ma.fields.Dict(
         keys=ma.fields.Str(), values=ma.fields.Float(), required=True
     )
+    max_number_of_plotted_values = ma.fields.Integer()
 
 
 class ObjectiveVisualizationRequest:
-    def __init__(self, evaluatedCostOverview):
-        self.evaluatedCostOverview = evaluatedCostOverview
+    def __init__(self, evaluated_cost_overview, problem_class, problem_instance):
+        self.evaluated_cost_overview = evaluated_cost_overview
+        self.problem_class = problem_class
+        self.problem_instance = problem_instance
 
 
 class ObjectiveVisualizationRequestSchema(ma.Schema):
-    objFun_hyperparameters = ma.fields.Dict(keys=ma.fields.Float(), required=True)
+    evaluated_cost_overview = ma.fields.Dict(keys=ma.fields.Float(), required=True)
+    problem_class = ma.fields.String()
+    problem_instance = AnyField()

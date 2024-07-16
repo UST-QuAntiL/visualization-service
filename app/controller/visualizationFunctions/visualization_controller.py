@@ -1,8 +1,8 @@
 from flask_smorest import Blueprint
 from flask import request
 from app.services import visualization_service
-from app.model.objective_response import VisualizationResponseSchema
-from app.model.objective_request import (
+from app.model.visualization_response import VisualizationResponseSchema
+from app.model.visualization_request import (
     CircuitVisualizationRequest,
     CircuitVisualizationRequestSchema,
     OptimizationLandscapeVisualizationRequest,
@@ -30,7 +30,7 @@ blp = Blueprint(
 def visualizeCircuit(json: CircuitVisualizationRequest):
     print(json)
     if json:
-        return visualization_service.visualizeCircuit(
+        return visualization_service.visualize_circuit(
             CircuitVisualizationRequest(**json)
         )
 
@@ -46,7 +46,7 @@ def visualizeCircuit(json: CircuitVisualizationRequest):
 def visualizeOptimizationLandscape(json: OptimizationLandscapeVisualizationRequest):
     print(json)
     if json:
-        return visualization_service.visualizeOptimizationLandscape(
+        return visualization_service.visualize_optimization_landscape(
             OptimizationLandscapeVisualizationRequest(**json)
         )
 
@@ -68,7 +68,7 @@ def visualizeOptimizationLandscape(json: OptimizationLandscapeVisualizationReque
 def visualizeExecutionResults(json: ExecutionResultVisualizationRequest):
     print(json)
     if json:
-        return visualization_service.generate_knapsack_objective_response(
+        return visualization_service.visualize_execution_results(
             ExecutionResultVisualizationRequest(**json)
         )
 
@@ -82,6 +82,6 @@ def visualizeExecutionResults(json: ExecutionResultVisualizationRequest):
 def shor_discrete_log(json: ObjectiveVisualizationRequest):
     print(json)
     if json:
-        return visualization_service.generate_shor_discrete_log_objective_response(
+        return visualization_service.visualize_objective(
             ObjectiveVisualizationRequest(**json)
         )
