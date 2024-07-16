@@ -14,6 +14,7 @@ from app.model.visualization_request import (
     ExecutionResultVisualizationRequest,
     ObjectiveVisualizationRequest,
 )
+from app.services.objective_visualization import MaxCutVisualization, TspVisualization
 
 
 def visualize_circuit(request: CircuitVisualizationRequest):
@@ -124,8 +125,8 @@ def visualize_objective(request: ObjectiveVisualizationRequest):
     problem_instance = request.problem_instance
 
     match request.problem_class:
-        case "maxcut":
-            return None
+        case "max-cut" | "maxcut" | "maximumcut":
+            return MaxCutVisualization().visualize(counts=costs, problem_instance=problem_instance)
         case "tsp":
-            return None
+            return TspVisualization().visualize(counts=costs, problem_instance=problem_instance)
     return None

@@ -65,7 +65,7 @@ class ExecutionResultVisualizationRequestSchema(ma.Schema):
 class ObjectiveVisualizationRequest:
     def __init__(self, evaluated_cost_overview, problem_class, problem_instance):
         self.evaluated_cost_overview = evaluated_cost_overview
-        self.problem_class = problem_class
+        self.problem_class = problem_class.lower()
         self.problem_instance = problem_instance
 
 
