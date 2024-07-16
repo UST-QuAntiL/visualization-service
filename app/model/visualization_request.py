@@ -40,17 +40,11 @@ class OptimizationLandscapeVisualizationRequest:
 
 
 class OptimizationLandscapeVisualizationRequestSchema(ma.Schema):
-    optimization_path = ma.fields.List(
-        ma.fields.List(ma.fields.Float()), required=True
-    )
+    optimization_path = ma.fields.List(ma.fields.List(ma.fields.Float()), required=True)
 
 
 class ExecutionResultVisualizationRequest:
-    def __init__(
-            self,
-            counts,
-            max_number_of_plotted_values=2 ** 6
-    ):
+    def __init__(self, counts, max_number_of_plotted_values=2**6):
         self.counts = counts
         self.max_number_of_plotted_values = max_number_of_plotted_values
 

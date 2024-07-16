@@ -22,14 +22,14 @@ class MaxCutVisualization(Visualization):
         pass
 
     def visualize(
-            self,
-            counts,
-            problem_instance,
-            printWeights=True,
-            ax=None,
-            edgeWidth=1.0,
-            node_size=600,
-            font_size=12,
+        self,
+        counts,
+        problem_instance,
+        printWeights=True,
+        ax=None,
+        edgeWidth=1.0,
+        node_size=600,
+        font_size=12,
     ):
         solution_string = get_solution_string(counts)
         figure = plt.figure()
@@ -140,15 +140,15 @@ class TspVisualization(Visualization):
             self.solutions.append((path, color, line_width))
 
         def draw_solution(
-                self,
-                full_graph=False,
-                full_graph_color="black",
-                full_graph_alpha=0.3,
-                full_graph_width=2,
-                xlim=(-11, 11),
-                ylim=(-11, 11),
-                figsize=(12, 12),
-                dot_size=120,
+            self,
+            full_graph=False,
+            full_graph_color="black",
+            full_graph_alpha=0.3,
+            full_graph_width=2,
+            xlim=(-11, 11),
+            ylim=(-11, 11),
+            figsize=(12, 12),
+            dot_size=120,
         ):
             figure = plt.figure(figsize=figsize)
 
@@ -239,7 +239,7 @@ class TspFunction(CostFunction):
     def path_from_string(self, string, amount_nodes):
         path = [-1] * amount_nodes
         for i in range(amount_nodes):
-            node_string = string[i * amount_nodes: i * amount_nodes + amount_nodes]
+            node_string = string[i * amount_nodes : i * amount_nodes + amount_nodes]
             node_position = node_string.find("1")
             path[node_position] = i
         return path

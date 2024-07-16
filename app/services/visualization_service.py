@@ -2,8 +2,6 @@ from qiskit import qasm3, QuantumCircuit
 from qiskit.visualization import plot_distribution
 from matplotlib import pyplot as plt
 import matplotlib as mpl
-import io
-import base64
 import numpy as np
 
 
@@ -14,27 +12,30 @@ from app.model.visualization_request import (
     ExecutionResultVisualizationRequest,
     ObjectiveVisualizationRequest,
 )
+from app.services.circuit_visualization import visualize_circuit_object
 from app.services.objective_visualization import MaxCutVisualization, TspVisualization
 
 
 def visualize_circuit(request: CircuitVisualizationRequest):
-    circuits = []
-    for c in request.circuit:
+    circuit_visualizations = []
+    for circuit_code in request.circuit:
+        circuit_object = None
         if request.circuit_format == "openqasm3":
-            loaded_circ = qasm3.loads(c)
-            circuits.append(loaded_circ)
+            circuit_object = qasm3.loads(circuit_code)
         elif request.circuit_format == "openqasm3":
-            circuits.append(QuantumCircuit.from_qasm_str(c))
+            circuit_object = QuantumCircuit.from_qasm_str(circuit_code)
         else:
             return "Currently only openqasm2 and openqasm3 are supported"
+        circuit_visualizations.append(visualize_circuit_object(circuit_object))
 
-    # TODO visualization
-    return None
+    return circuit_visualizations
 
 
-def visualize_optimization_landscape(request: OptimizationLandscapeVisualizationRequest):
+def visualize_optimization_landscape(
+    request: OptimizationLandscapeVisualizationRequest,
+):
     optimization_path = request.optimization_path
-    print(optimization_path);
+    print(optimization_path)
     xs, ys, vals = np.array([]), np.array([]), np.array([])
     for k in range(len(optimization_path)):
         xs = np.append(xs, optimization_path[k]["params"][0])
@@ -64,15 +65,27 @@ def visualize_optimization_landscape(request: OptimizationLandscapeVisualization
     # -better version with arrows
     # 1) prepare vectors starting at the last point and ending just where the circle of the next point begins (considering its radius)
     vectors = []
-    for x_pre, x_suc, y_pre, y_suc, radius in zip(xs[1:], xs[:-1], ys[1:], ys[:-1], radii[1:]):
+    for x_pre, x_suc, y_pre, y_suc, radius in zip(
+        xs[1:], xs[:-1], ys[1:], ys[:-1], radii[1:]
+    ):
         vector = np.array([x_pre - x_suc, y_pre - y_suc])
         vlen = np.sqrt(vector[0] ** 2 + vector[1] ** 2)
         vectors.append(vector * (1 - radius / vlen))
     vectors = np.array(vectors)
 
     # 2) plot the arrows
-    ax_path.quiver(xs[:-1], ys[:-1], vectors[:, 0], vectors[:, 1], scale_units='xy', angles='xy', scale=1, headlength=4,
-                   headaxislength=4, color='lightgrey')
+    ax_path.quiver(
+        xs[:-1],
+        ys[:-1],
+        vectors[:, 0],
+        vectors[:, 1],
+        scale_units="xy",
+        angles="xy",
+        scale=1,
+        headlength=4,
+        headaxislength=4,
+        color="lightgrey",
+    )
 
     # plot the data points as circles
     for i, (val, radius) in enumerate(zip(vals, radii)):
@@ -84,8 +97,12 @@ def visualize_optimization_landscape(request: OptimizationLandscapeVisualization
     ax_path.set_ylabel("Parameter 2")
 
     # add the color bar
-    fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap),
-                 cax=ax_cbar, orientation='horizontal', label='Objective Value')
+    fig.colorbar(
+        mpl.cm.ScalarMappable(norm=norm, cmap=cmap),
+        cax=ax_cbar,
+        orientation="horizontal",
+        label="Objective Value",
+    )
 
     # plot the optimization progress
     ax_progress.plot(vals)
@@ -111,11 +128,18 @@ def visualize_execution_results(request: ExecutionResultVisualizationRequest):
         max_number_of_plotted_values = request.max_number_of_plotted_values
         if len(counts.keys()) > max_number_of_plotted_values:
             unused_counts = dict(
-                sorted(counts.items(), key=lambda x: x[1], reverse=True)[max_number_of_plotted_values:len(counts.keys())])
+                sorted(counts.items(), key=lambda x: x[1], reverse=True)[
+                    max_number_of_plotted_values : len(counts.keys())
+                ]
+            )
             total_frequency_of_unused = sum(unused_counts.values())
-            counts = dict(sorted(counts.items(), key=lambda x: x[1], reverse=True)[0:max_number_of_plotted_values])
-            counts['combinedLowProbabilities'] = total_frequency_of_unused
-        plots.append(figure_to_base64(plot_distribution(counts, sort='value_desc')))
+            counts = dict(
+                sorted(counts.items(), key=lambda x: x[1], reverse=True)[
+                    0:max_number_of_plotted_values
+                ]
+            )
+            counts["combinedLowProbabilities"] = total_frequency_of_unused
+        plots.append(figure_to_base64(plot_distribution(counts, sort="value_desc")))
 
     return plots
 
@@ -126,7 +150,11 @@ def visualize_objective(request: ObjectiveVisualizationRequest):
 
     match request.problem_class:
         case "max-cut" | "maxcut" | "maximumcut":
-            return MaxCutVisualization().visualize(counts=costs, problem_instance=problem_instance)
+            return MaxCutVisualization().visualize(
+                counts=costs, problem_instance=problem_instance
+            )
         case "tsp":
-            return TspVisualization().visualize(counts=costs, problem_instance=problem_instance)
+            return TspVisualization().visualize(
+                counts=costs, problem_instance=problem_instance
+            )
     return None
