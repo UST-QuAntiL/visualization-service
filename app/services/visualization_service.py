@@ -117,7 +117,6 @@ def visualize_optimization_landscape(
     return figure_base64
 
 
-
 def visualize_execution_results(request: ExecutionResultVisualizationRequest):
     count_list = request.counts
     if isinstance(count_list, dict):

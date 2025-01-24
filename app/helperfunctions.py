@@ -8,11 +8,14 @@ def take_first(elem):
 def take_second(elem):
     return elem[1]
 
+
 def take_num_occurences(elem):
-    return elem['num_occurrences']
+    return elem["num_occurrences"]
+
 
 def take_bitstring(elem):
-    return elem['bitstring']
+    return elem["bitstring"]
+
 
 def take_third(elem):
     return elem[2]
