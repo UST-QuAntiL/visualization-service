@@ -178,7 +178,7 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         print(response.get_json())
 
-    def test_objective_visualization(self):
+    def test_objective_maxcut_visualization(self):
         response = self.client.post(
             "/visualize/objective",
             data=json.dumps(
