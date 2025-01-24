@@ -40,7 +40,7 @@ class OptimizationLandscapeVisualizationRequest:
 
 
 class OptimizationLandscapeVisualizationRequestSchema(ma.Schema):
-    optimization_path = ma.fields.List(ma.fields.List(ma.fields.Float()), required=True)
+    optimization_path = AnyField()
 
 
 class ExecutionResultVisualizationRequest:
@@ -57,13 +57,13 @@ class ExecutionResultVisualizationRequestSchema(ma.Schema):
 
 
 class ObjectiveVisualizationRequest:
-    def __init__(self, evaluated_cost_overview, problem_class, problem_instance):
-        self.evaluated_cost_overview = evaluated_cost_overview
+    def __init__(self, costs, problem_class, problem_instance):
+        self.costs = costs
         self.problem_class = problem_class.lower()
         self.problem_instance = problem_instance
 
 
 class ObjectiveVisualizationRequestSchema(ma.Schema):
-    evaluated_cost_overview = ma.fields.Dict(keys=ma.fields.Float(), required=True)
+    costs = ma.fields.List(ma.fields.Dict(keys=AnyField()), required=True)
     problem_class = ma.fields.String()
     problem_instance = AnyField()

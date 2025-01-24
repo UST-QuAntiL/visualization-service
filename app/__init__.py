@@ -14,6 +14,6 @@ def create_app(config_name="default"):
 
     @app.route("/")
     def heartbeat():
-        return '<h1>Objective function service is running</h1> <h3>View the API Docs <a href="/api/swagger-ui">here</a></h3>'
+        return '<h1>Visualization service is running</h1> <h3>View the API Docs <a href="/api/swagger-ui">here</a></h3>'
 
     return app

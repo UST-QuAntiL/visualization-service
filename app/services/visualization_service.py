@@ -117,6 +117,7 @@ def visualize_optimization_landscape(
     return figure_base64
 
 
+
 def visualize_execution_results(request: ExecutionResultVisualizationRequest):
     count_list = request.counts
     if isinstance(count_list, dict):
@@ -145,7 +146,7 @@ def visualize_execution_results(request: ExecutionResultVisualizationRequest):
 
 
 def visualize_objective(request: ObjectiveVisualizationRequest):
-    costs = request.evaluated_cost_overview
+    costs = request.costs
     problem_instance = request.problem_instance
 
     match request.problem_class:

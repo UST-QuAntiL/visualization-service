@@ -18,44 +18,13 @@ class FlaskClientTestCase(unittest.TestCase):
     def tearDown(self):
         self.app_context.pop()
 
-    def test_tsp(self):
+    def test_circuit_visualization(self):
         response = self.client.post(
-            "/objective/tsp",
+            "/visualize/circuit",
             data=json.dumps(
                 {
-                    "adj_matrix": [
-                        [0, 15, 16, 7],
-                        [8, 0, 5, 1],
-                        [10, 6, 0, 3],
-                        [12, 3, 1, 0],
-                    ],
-                    "counts": {
-                        "0001010000101000": 3,
-                        "0010010010000001": 11,
-                        "0001100001000010": 1,
-                        "0001100000100100": 43,
-                        "0001001010000100": 41,
-                        "1000000100100100": 6,
-                        "0100001010000001": 41,
-                        "0100100000100001": 12,
-                        "0010010000011000": 58,
-                        "0001001001001000": 493,
-                        "1000010000010010": 20,
-                        "0001010010000010": 7,
-                        "0010000110000100": 76,
-                        "0010100000010100": 2,
-                        "0010000101001000": 3,
-                        "0100000100101000": 5,
-                        "1000001001000001": 1,
-                        "0100001000011000": 4,
-                        "0100100000010010": 41,
-                        "0010100001000001": 17,
-                        "1000010000100001": 74,
-                        "1000001000010100": 6,
-                        "1000000101000010": 59,
-                    },
-                    "objFun": "Expectation",
-                    "visualization": "True",
+                    "circuit": ["OPENQASM 3;\ninclude 'stdgates.inc';\ninput float[64] beta0;\ninput float[64] gamma0;\nbit[4] c;\nqubit[4] q;\nry(pi/3) q[0];\nry(pi/3) q[1];\nry(2*pi/3) q[2];\nry(2*pi/3) q[3];\nbarrier q[0], q[1], q[2], q[3];\ncx q[1], q[0];\nrz(gamma0) q[0];\ncx q[1], q[0];\ncx q[2], q[0];\nrz(gamma0) q[0];\ncx q[2], q[0];\ncx q[2], q[1];\nrz(gamma0) q[1];\ncx q[2], q[1];\ncx q[3], q[0];\nrz(gamma0) q[0];\ncx q[3], q[0];\ncx q[3], q[1];\nrz(gamma0) q[1];\ncx q[3], q[1];\ncx q[3], q[2];\nrz(gamma0) q[2];\ncx q[3], q[2];\nbarrier q[0], q[1], q[2], q[3];\nry(pi/3) q[0];\nrz(beta0) q[0];\nry(-pi/3) q[0];\nry(pi/3) q[1];\nrz(beta0) q[1];\nry(-pi/3) q[1];\nry(2*pi/3) q[2];\nrz(beta0) q[2];\nry(-2*pi/3) q[2];\nry(2*pi/3) q[3];\nrz(beta0) q[3];\nry(-2*pi/3) q[3];\nbarrier q[0], q[1], q[2], q[3];\nc[3] = measure q[0];\nc[2] = measure q[1];\nc[1] = measure q[2];\nc[0] = measure q[3];\n"],
+                    "circuit_format": "openqasm3"
                 }
             ),
             content_type="application/json",
@@ -63,44 +32,223 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         print(response.get_json())
 
-    def test_tsp2(self):
+    def test_optimization_visualization(self):
         response = self.client.post(
-            "/objective/tsp",
+            "/visualize/optimizationLandscape",
             data=json.dumps(
                 {
-                    "adj_matrix": [
-                        [0, 9, 4, 15],
-                        [10, 0, 4, 17],
-                        [1, 11, 0, 3],
-                        [18, 8, 19, 0],
-                    ],
-                    "counts": {
-                        "0001010000101000": 3,
-                        "0010010010000001": 11,
-                        "0001100001000010": 1,
-                        "0001100000100100": 43,
-                        "0001001010000100": 41,
-                        "1000000100100100": 6,
-                        "0100001010000001": 41,
-                        "0100100000100001": 12,
-                        "0010010000011000": 58,
-                        "0001001001001000": 493,
-                        "1000010000010010": 20,
-                        "0001010010000010": 7,
-                        "0010000110000100": 76,
-                        "0010100000010100": 2,
-                        "0010000101001000": 3,
-                        "0100000100101000": 5,
-                        "1000001001000001": 1,
-                        "0100001000011000": 4,
-                        "0100100000010010": 41,
-                        "0010100001000001": 17,
-                        "1000010000100001": 74,
-                        "1000001000010100": 6,
-                        "1000000101000010": 59,
-                    },
-                    "objFun": "Expectation",
-                    "visualization": "True",
+                    "optimization_path": [
+                        {
+                            "obj_value": -13.245290375,
+                            "params": [
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "obj_value": -9.995985500000002,
+                            "params": [
+                                2,
+                                1
+                            ]
+                        },
+                        {
+                            "obj_value": -13.258442125000002,
+                            "params": [
+                                1,
+                                2
+                            ]
+                        },
+                        {
+                            "obj_value": -12.72029275,
+                            "params": [
+                                0.000008191262308554492,
+                                2.0040475248634735
+                            ]
+                        },
+                        {
+                            "obj_value": -11.6112665,
+                            "params": [
+                                1.4998507844978033,
+                                2.012214468344166
+                            ]
+                        },
+                        {
+                            "obj_value": -13.689691999999997,
+                            "params": [
+                                0.7500019906190336,
+                                2.0009976500158997
+                            ]
+                        },
+                        {
+                            "obj_value": -14.09261225,
+                            "params": [
+                                0.5000092566916325,
+                                2.0029036887100613
+                            ]
+                        },
+                        {
+                            "obj_value": -13.930265500000003,
+                            "params": [
+                                0.25009216512997734,
+                                2.009341649983883
+                            ]
+                        },
+                        {
+                            "obj_value": -14.424431,
+                            "params": [
+                                0.5009622760387135,
+                                2.127900055673762
+                            ]
+                        },
+                        {
+                            "obj_value": -14.52090975,
+                            "params": [
+                                0.3728513666163408,
+                                2.3425802710802417
+                            ]
+                        },
+                        {
+                            "obj_value": -15.142845249999999,
+                            "params": [
+                                0.5757426902796926,
+                                2.4886457043015655
+                            ]
+                        },
+                        {
+                            "obj_value": -15.000321375,
+                            "params": [
+                                0.7680111766582451,
+                                2.6484356575079557
+                            ]
+                        },
+                        {
+                            "obj_value": -14.761449375000003,
+                            "params": [
+                                0.6718769334689689,
+                                2.5685406809047606
+                            ]
+                        },
+                        {
+                            "obj_value": -15.404793249999999,
+                            "params": [
+                                0.535795201978095,
+                                2.5367128258962035
+                            ]
+                        },
+                        {
+                            "obj_value": -14.835603999999998,
+                            "params": [
+                                0.41462321546601905,
+                                2.56741054054595
+                            ]
+                        },
+                        {
+                            "obj_value": -14.872176750000001,
+                            "params": [
+                                0.569849877942577,
+                                2.5891201635976566
+                            ]
+                        },
+                        {
+                            "obj_value": -14.758917749999998,
+                            "params": [
+                                0.5059819200938052,
+                                2.5273463578698943
+                            ]
+                        },
+                        {
+                            "obj_value": -14.783415000000003,
+                            "params": [
+                                0.546981594148327,
+                                2.5258038729118986
+                            ]
+                        },
+                        {
+                            "obj_value": -14.786664750000002,
+                            "params": [
+                                0.5365381045953941,
+                                2.552320154966266
+                            ]
+                        },
+                        {
+                            "obj_value": -14.8319475,
+                            "params": [
+                                0.5285227978838499,
+                                2.5338584792213923
+                            ]
+                        },
+                        {
+                            "obj_value": -14.879217624999999,
+                            "params": [
+                                0.5372757626521216,
+                                2.5403276189958186
+                            ]
+                        },
+                        {
+                            "obj_value": -14.750468375,
+                            "params": [
+                                0.538167829292392,
+                                2.5336096938187773
+                            ]
+                        },
+                        {
+                            "obj_value": -14.979846,
+                            "params": [
+                                0.5338467936367544,
+                                2.53657717118372
+                            ]
+                        },
+                        {
+                            "obj_value": -15.045762750000003,
+                            "params": [
+                                0.5364759685473834,
+                                2.536012660776717
+                            ]
+                        },
+                        {
+                            "obj_value": -14.617321,
+                            "params": [
+                                0.5360335150426044,
+                                2.537659864015653
+                            ]
+                        },
+                        {
+                            "obj_value": -14.446960625,
+                            "params": [
+                                0.5353594195605238,
+                                2.5364925708993535
+                            ]
+                        },
+                        {
+                            "obj_value": -14.819046000000002,
+                            "params": [
+                                0.5359393635874721,
+                                2.536909859079087
+                            ]
+                        },
+                        {
+                            "obj_value": -14.577694499999998,
+                            "params": [
+                                0.5359486162896689,
+                                2.5365229082988625
+                            ]
+                        },
+                        {
+                            "obj_value": -14.641329,
+                            "params": [
+                                0.5356957708428173,
+                                2.5367234771560994
+                            ]
+                        },
+                        {
+                            "obj_value": -14.75246825,
+                            "params": [
+                                0.5357898763481472,
+                                2.5366631103285644
+                            ]
+                        }
+                    ]
                 }
             ),
             content_type="application/json",
@@ -108,114 +256,73 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         print(response.get_json())
 
-    def test_max_cut(self):
+    def test_execution_result_visualization(self):
         response = self.client.post(
-            "/objective/max-cut",
+            "/visualize/executionResults",
             data=json.dumps(
                 {
-                    "adj_matrix": [
-                        [0, 3, 3, 6, 9, 1],
-                        [3, 0, 4, 4, -8, 4],
-                        [3, 4, 0, 3, -7, 1],
-                        [6, 4, 3, 0, -7, 6],
-                        [9, -8, -7, -7, 0, -5],
-                        [1, 4, 1, 6, -5, 0],
-                    ],
-                    "counts": {
-                        "100000": 11,
-                        "100001": 5,
-                        "100010": 12,
-                        "100011": 14,
-                        "100100": 15,
-                        "100101": 12,
-                        "100110": 18,
-                        "100111": 17,
-                        "101000": 17,
-                        "101001": 24,
-                        "101010": 9,
-                        "101011": 10,
-                        "101100": 22,
-                        "101101": 17,
-                        "101110": 15,
-                        "101111": 14,
-                        "110000": 14,
-                        "110001": 11,
-                        "110010": 15,
-                        "110011": 11,
-                        "110100": 12,
-                        "110101": 10,
-                        "110110": 11,
-                        "110111": 15,
-                        "111000": 13,
-                        "111001": 9,
-                        "111010": 14,
-                        "111011": 12,
-                        "111100": 9,
-                        "111101": 13,
-                        "111110": 9,
-                        "111111": 17,
-                        "000000": 15,
-                        "000001": 10,
-                        "000010": 9,
-                        "000011": 14,
-                        "000100": 8,
-                        "000101": 10,
-                        "000110": 14,
-                        "000111": 17,
-                        "001000": 10,
-                        "001001": 4,
-                        "001010": 8,
-                        "001011": 14,
-                        "001100": 15,
-                        "001101": 11,
-                        "001110": 19,
-                        "001111": 4,
-                        "010000": 11,
-                        "010001": 12,
-                        "010010": 10,
-                        "010011": 12,
-                        "010100": 16,
-                        "010101": 12,
-                        "010110": 13,
-                        "010111": 10,
-                        "011000": 7,
-                        "011001": 8,
-                        "011010": 15,
-                        "011011": 13,
-                        "011100": 13,
-                        "011101": 10,
-                        "011110": 14,
-                        "011111": 15,
-                    },
-                    "objFun": "Expectation",
-                    "visualization": "True",
-                }
-            ),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-        print(response.get_json())
-
-    def test_knapsack(self):
-        response = self.client.post(
-            "/objective/knapsack",
-            data=json.dumps(
-                {
-                    "items": [
-                        {"value": 5, "weight": 2},
-                        {"value": 2, "weight": 1},
-                        {"value": 3, "weight": 2},
-                    ],
-                    "max_weights": 20,
                     "counts": {
                         "100000": 30,
                         "100001": 10,
                         "110000": 50,
                         "011110": 20,
-                        "010110": 40,
-                    },
-                    "objFun": "Expectation",
-                    "visualization": "True",
+                        "010110": 40
+                    }
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        print(response.get_json())
+
+    def test_objective_visualization(self):
+        response = self.client.post(
+            "/visualize/objective",
+            data=json.dumps(
+                {
+                    "costs": [{"cost": -17, "num_occurrences": 484.81525000000005, "bitstring": "1100"},
+                               {"cost": -13, "num_occurrences": 87.94637499999999, "bitstring": "0110"},
+                               {"cost": -13, "num_occurrences": 81.42075000000001, "bitstring": "1001"},
+                               {"cost": -16, "num_occurrences": 80.969, "bitstring": "0101"},
+                               {"cost": -16, "num_occurrences": 71.53025000000001, "bitstring": "1010"},
+                               {"cost": -10, "num_occurrences": 51.26362500000002, "bitstring": "1101"},
+                               {"cost": -11, "num_occurrences": 33.39325, "bitstring": "0100"},
+                               {"cost": -13, "num_occurrences": 33.325500000000034, "bitstring": "1110"},
+                               {"cost": -12, "num_occurrences": 30.04375, "bitstring": "1000"},
+                               {"cost": 0, "num_occurrences": 16.980500000000003, "bitstring": "0000"},
+                               {"cost": -17, "num_occurrences": 9.10774999999999, "bitstring": "0011"},
+                               {"cost": -11, "num_occurrences": 7.790250000000017, "bitstring": "1011"},
+                               {"cost": 0, "num_occurrences": 6.1002500000000115, "bitstring": "1111"},
+                               {"cost": -10, "num_occurrences": 5.671249999999998, "bitstring": "0010"},
+                               {"cost": -13, "num_occurrences": 3.0732500000000034, "bitstring": "0001"},
+                               {"cost": -12, "num_occurrences": -3.431, "bitstring": "0111"}],
+                    "problem_class": "maxcut",
+                    "problem_instance": [
+                        [
+                            0,
+                            3,
+                            3,
+                            6
+                        ],
+                        [
+                            3,
+                            0,
+                            4,
+                            4
+                        ],
+                        [
+                            3,
+                            4,
+                            0,
+                            3
+                        ],
+                        [
+                            6,
+                            4,
+                            3,
+                            0
+                        ]
+                    ]
                 }
             ),
             content_type="application/json",

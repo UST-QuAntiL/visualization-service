@@ -8,13 +8,18 @@ def take_first(elem):
 def take_second(elem):
     return elem[1]
 
+def take_num_occurences(elem):
+    return elem['num_occurrences']
+
+def take_bitstring(elem):
+    return elem['bitstring']
 
 def take_third(elem):
     return elem[2]
 
 
 def get_solution_string(counts):
-    return take_first(max(counts, key=take_second))
+    return take_bitstring(max(counts, key=take_num_occurences))
 
 
 def parse_solution(sol):
